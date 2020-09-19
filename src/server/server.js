@@ -91,14 +91,15 @@ const renderApp = async (req, res) => {
       method: 'get',
     });
     movieList = movieList.data.data
-
     initialState = {
       user: {
         id, email, name
       },
       myList: [],
-      trends: movieList.filter(movie => movie.contentRating === 'PG' && movie._id),
-      originals: movieList.filter(movie => movie.contentRating === 'G' && movie._id)
+      trends: movieList,
+      originals: movieList
+      // trends: movieList.filter(movie => movie.contentRating === 'PG' && movie._id),
+      // originals: movieList.filter(movie => movie.contentRating === 'G' && movie._id)
     }
   }
   catch(err){
@@ -140,12 +141,11 @@ app.post('/auth/sign-in', async function (req, res, next) {
         }
 
         const { token, ...user } = data;
-        console.log(token)
+
         res.cookie('token', token, {
-          httpOnly: !process.env.DEV,
-          secure: !process.env.DEV,
+          httpOnly: !(ENV === 'development'),
+          secure: !(ENV === 'development'),
         });
-        
         res.status(200).json(user);
       });
     } catch (err) {
